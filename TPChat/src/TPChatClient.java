@@ -1,3 +1,5 @@
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,6 +10,7 @@ import java.net.Socket;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+// Connect to Server
 public class TPChatClient {
 	public static final String SERVER_HOSTNAME = "localhost";
 	public static final int SERVER_PORT = 2002;
@@ -21,9 +24,10 @@ public class TPChatClient {
 
 		BufferedReader in = null;
 		PrintWriter out = null;
+		Socket socket = null;
 		try {
 			// Connect to Server
-			Socket socket = new Socket(SERVER_HOSTNAME, SERVER_PORT);
+			socket = new Socket(SERVER_HOSTNAME, SERVER_PORT);
 			in = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			out = new PrintWriter(new OutputStreamWriter(
@@ -43,6 +47,56 @@ public class TPChatClient {
 		receiver.start();
 
 		textField.addKeyListener(new Sender(out, textField));
+
+		clientGUI.addWindowListener(new SocketCloser(socket, receiver));
+	}
+}
+
+class SocketCloser implements WindowListener {
+
+	private Socket socket;
+	private Receiver receiver;
+
+	public SocketCloser(Socket paramSocket, Receiver paramReceiver) {
+		socket = paramSocket;
+		receiver = paramReceiver;
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public void windowClosing(WindowEvent e) {
+		receiver.stop();
+
+		try {
+			socket.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		System.exit(0);
 	}
 
+	@Override
+	public void windowClosed(WindowEvent e) {
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+	}
 }
