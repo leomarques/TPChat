@@ -6,9 +6,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class ClientGUI extends JFrame {
-	public static final String SERVER_HOSTNAME = "localhost";
-	public static final int SERVER_PORT = 2002;
-
 	private Panel panel;
 
 	public ClientGUI() {
