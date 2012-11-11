@@ -61,7 +61,7 @@ class SocketCloser implements WindowListener {
 		socket = paramSocket;
 		receiver = paramReceiver;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public void windowClosing(WindowEvent e) {
@@ -72,7 +72,7 @@ class SocketCloser implements WindowListener {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		System.exit(0);
 	}
 

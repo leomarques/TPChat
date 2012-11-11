@@ -4,8 +4,8 @@
  * chat server.
  */
 
-import java.net.*;
-import java.util.*;
+import java.net.Socket;
+import java.util.Vector;
 
 public class ServerDispatcher extends Thread {
 	private Vector<String> mMessageQueue = new Vector<String>();
@@ -68,6 +68,10 @@ public class ServerDispatcher extends Thread {
 			ClientInfo clientInfo = (ClientInfo) mClients.get(i);
 			clientInfo.mClientSender.sendMessage(aMessage);
 		}
+	}
+	
+	public int getClientsCount() {
+		return mClients.size();
 	}
 
 	/**

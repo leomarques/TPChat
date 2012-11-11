@@ -4,13 +4,16 @@
  * creates threads for handling them and starts these threads.
  */
 
-import java.net.*;
-import java.io.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
 
 public class Server {
 
 	public static final int LISTENING_PORT = 2002;
 
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
 		// Open server socket for listening
 		ServerSocket serverSocket = null;
@@ -28,6 +31,40 @@ public class Server {
 		ServerDispatcher serverDispatcher = new ServerDispatcher();
 		serverDispatcher.start();
 
+		ConnectionsHandler connectionsHandler = new ConnectionsHandler(
+				serverSocket, serverDispatcher);
+		connectionsHandler.setDaemon(true);
+		connectionsHandler.start();
+
+		Scanner scanner = new Scanner(System.in);
+		while (true) {
+			if (scanner.nextLine().startsWith("q")) {
+				connectionsHandler.stop();
+				try {
+					serverSocket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				scanner.close();
+				System.exit(0);
+			}
+		}
+	}
+
+}
+
+class ConnectionsHandler extends Thread {
+
+	private ServerSocket serverSocket;
+	private ServerDispatcher serverDispatcher;
+
+	public ConnectionsHandler(ServerSocket paramSocket,
+			ServerDispatcher paramServerDispatcher) {
+		serverSocket = paramSocket;
+		serverDispatcher = paramServerDispatcher;
+	}
+
+	public void run() {
 		// Accept and handle client connections
 		while (true) {
 			try {
@@ -48,5 +85,4 @@ public class Server {
 			}
 		}
 	}
-
 }
