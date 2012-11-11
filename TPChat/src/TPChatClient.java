@@ -7,12 +7,12 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 // Connect to Server
 public class TPChatClient {
-	public static final String SERVER_HOSTNAME = "localhost";
 	public static final int SERVER_PORT = 2002;
 
 	public static void main(String[] args) {
@@ -20,6 +20,8 @@ public class TPChatClient {
 		JTextArea textArea = clientGUI.getTextArea();
 		JTextField textField = clientGUI.getTextField();
 
+		String serverHostName = (String) JOptionPane
+				.showInputDialog("Server hostname:");
 		textArea.append("Welcome to TPChat!\n");
 
 		BufferedReader in = null;
@@ -27,16 +29,16 @@ public class TPChatClient {
 		Socket socket = null;
 		try {
 			// Connect to Server
-			socket = new Socket(SERVER_HOSTNAME, SERVER_PORT);
+			socket = new Socket(serverHostName, SERVER_PORT);
 			in = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			out = new PrintWriter(new OutputStreamWriter(
 					socket.getOutputStream()));
-			textArea.append("Connected to server " + SERVER_HOSTNAME + ":"
+			textArea.append("Connected to server " + serverHostName + ":"
 					+ SERVER_PORT);
 		} catch (IOException ioe) {
-			textArea.append("Can not establish connection to "
-					+ SERVER_HOSTNAME + ":" + SERVER_PORT);
+			textArea.append("Can not establish connection to " + serverHostName
+					+ ":" + SERVER_PORT);
 			ioe.printStackTrace();
 			System.exit(-1);
 		}
