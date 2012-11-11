@@ -16,7 +16,7 @@ public class TPChatClient {
 		ClientGUI clientGUI = new ClientGUI();
 		JTextArea textArea = clientGUI.getTextArea();
 		JTextField textField = clientGUI.getTextField();
-		
+
 		textArea.append("Welcome to TPChat!\n");
 
 		BufferedReader in = null;
@@ -36,15 +36,13 @@ public class TPChatClient {
 			ioe.printStackTrace();
 			System.exit(-1);
 		}
-		
+
 		textArea.append("\n\n");
-		
+
 		Receiver receiver = new Receiver(textArea, in);
 		receiver.start();
-		
-		Sender sender = new Sender(out);
-		sender.setDaemon(true);
-		sender.start();
+
+		textField.addKeyListener(new Sender(out, textField));
 	}
 
 }

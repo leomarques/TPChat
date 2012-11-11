@@ -1,30 +1,29 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.PrintWriter;
 
-class Sender extends Thread {
-	private PrintWriter mOut;
+import javax.swing.JTextField;
 
-	public Sender(PrintWriter aOut) {
+class Sender implements KeyListener {
+	private PrintWriter mOut;
+	private JTextField textField;
+
+	public Sender(PrintWriter aOut, JTextField paramTextField) {
 		mOut = aOut;
+		textField = paramTextField;
 	}
 
-	/**
-	 * Until interrupted reads messages from the standard input (keyboard) and
-	 * sends them to the chat server through the socket.
-	 */
-	public void run() {
-		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					System.in));
-			while (!isInterrupted()) {
-				String message = in.readLine();
-				mOut.println(message);
-				mOut.flush();
-			}
-		} catch (IOException ioe) {
-			// Communication is broken
+	@Override
+	public void keyTyped(KeyEvent e) {
+		if (e.getKeyChar() == '\n') {
+			mOut.println(textField.getText());
+			mOut.flush();
+			textField.setText("");
 		}
 	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {}
+	@Override
+	public void keyReleased(KeyEvent e) {}
 }
