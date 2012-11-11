@@ -5,9 +5,11 @@
  * messages from the queue to the client socket.
  */
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Vector;
 
 public class ClientSender extends Thread {
 	private Vector<String> mMessageQueue = new Vector<String>();
