@@ -36,7 +36,13 @@ public class Server {
 
 		Scanner scanner = new Scanner(System.in);
 		while (true) {
-			if (scanner.nextLine().startsWith("q")) {
+			String message = scanner.nextLine();
+			
+			if (message.equals("/u")) {
+				System.out.println(serverDispatcher.getClientCount() + " users online.");
+			}
+			
+			if (message.equals("/q")) {
 				connectionsHandler.interrupt();
 				try {
 					serverDispatcher.closeAllClients();
@@ -48,6 +54,8 @@ public class Server {
 				scanner.close();
 				System.exit(0);
 			}
+			
+			serverDispatcher.serverMessage(message);
 		}
 	}
 
@@ -80,6 +88,7 @@ class ConnectionsHandler extends Thread {
 				clientListener.start();
 				clientSender.start();
 				serverDispatcher.addClient(clientInfo);
+				serverDispatcher.serverMessage("User " + clientInfo + " logged in, " + serverDispatcher.getClientCount() + " user(s) online.");
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}

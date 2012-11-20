@@ -37,10 +37,17 @@ public class ServerDispatcher extends Thread {
 	 */
 	public synchronized void dispatchMessage(ClientInfo aClientInfo,
 			String aMessage) {
-		Socket socket = aClientInfo.mSocket;
-		String senderIP = socket.getInetAddress().getHostAddress();
-		String senderPort = "" + socket.getPort();
-		aMessage = senderIP + ":" + senderPort + " : " + aMessage;
+		if (aMessage.equals("/u")) {
+			serverMessage(getClientCount() + " users online.");
+			return;
+		}
+		aMessage = aClientInfo + " : " + aMessage;
+		mMessageQueue.add(aMessage);
+		notify();
+	}
+
+	public synchronized void serverMessage(String aMessage) {
+		aMessage = "SERVER: " + aMessage;
 		mMessageQueue.add(aMessage);
 		notify();
 	}
@@ -78,6 +85,10 @@ public class ServerDispatcher extends Thread {
 			socket.close();
 		}
 		mClients.clear();
+	}
+	
+	public int getClientCount() {
+		return mClients.size();
 	}
 
 	/**
