@@ -20,8 +20,8 @@ public class TPChatClient {
 		JTextArea textArea = clientGUI.getTextArea();
 		JTextField textField = clientGUI.getTextField();
 
-		String serverHostName = (String) JOptionPane
-				.showInputDialog("Server hostname:");
+		String serverHostName = (String) JOptionPane.showInputDialog(
+				"Server hostname:", "localhost");
 		textArea.append("Welcome to TPChat!\n");
 
 		BufferedReader in = null;
@@ -46,6 +46,7 @@ public class TPChatClient {
 		textArea.append("\n\n");
 
 		Receiver receiver = new Receiver(textArea, in);
+		receiver.setDaemon(true);
 		receiver.start();
 
 		textField.addKeyListener(new Sender(out, textField));
@@ -64,11 +65,9 @@ class SocketCloser implements WindowListener {
 		receiver = paramReceiver;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void windowClosing(WindowEvent e) {
-		receiver.stop();
-
+		receiver.interrupt();
 		try {
 			socket.close();
 		} catch (IOException e1) {

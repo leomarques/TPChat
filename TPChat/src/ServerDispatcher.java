@@ -4,6 +4,7 @@
  * chat server.
  */
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Vector;
 
@@ -69,9 +70,14 @@ public class ServerDispatcher extends Thread {
 			clientInfo.mClientSender.sendMessage(aMessage);
 		}
 	}
-	
-	public int getClientsCount() {
-		return mClients.size();
+
+	public void closeAllClients() throws IOException {
+		for (int i = 0; i < mClients.size(); i++) {
+			ClientInfo clientInfo = (ClientInfo) mClients.get(i);
+			Socket socket = clientInfo.mSocket;
+			socket.close();
+		}
+		mClients.clear();
 	}
 
 	/**
@@ -88,5 +94,4 @@ public class ServerDispatcher extends Thread {
 			// Thread interrupted. Stop its execution
 		}
 	}
-
 }
