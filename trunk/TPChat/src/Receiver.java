@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 
 import javax.swing.JTextArea;
 
@@ -19,9 +18,10 @@ public class Receiver extends Thread {
 			while ((message = in.readLine()) != null) {
 				textArea.append(message + "\n");
 			}
-		} catch (IOException ioe) {
+		} catch (Exception ioe) {
 			textArea.append("Connection to server broken.\n");
 			ioe.printStackTrace();
 		}
+		textArea.append("Server closed.\n");
 	}
 }

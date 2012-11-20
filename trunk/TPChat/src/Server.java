@@ -13,7 +13,6 @@ public class Server {
 
 	public static final int LISTENING_PORT = 2002;
 
-	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
 		// Open server socket for listening
 		ServerSocket serverSocket = null;
@@ -33,14 +32,15 @@ public class Server {
 
 		ConnectionsHandler connectionsHandler = new ConnectionsHandler(
 				serverSocket, serverDispatcher);
-		connectionsHandler.setDaemon(true);
 		connectionsHandler.start();
 
 		Scanner scanner = new Scanner(System.in);
 		while (true) {
 			if (scanner.nextLine().startsWith("q")) {
-				connectionsHandler.stop();
+				connectionsHandler.interrupt();
 				try {
+					serverDispatcher.closeAllClients();
+					serverDispatcher.interrupt();
 					serverSocket.close();
 				} catch (IOException e) {
 					e.printStackTrace();
